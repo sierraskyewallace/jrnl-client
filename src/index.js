@@ -11,7 +11,7 @@ let store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
 
 
 ReactDOM.render(
-  <Provider>
+  <Provider store={store}>
   <App />
   </Provider >
   ,
