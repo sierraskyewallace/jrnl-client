@@ -57,9 +57,11 @@ class App extends React.Component {
 
 
   render() {
+    const { currentUser } = this.state;
     return (
       <div className="App">
-        <h1>hello </h1>
+        <h1>Welcome to JRNL </h1>
+        <h2>{ currentUser ? `Welcome ${currentUser.data.attributes.username}` : "Login" }</h2>
         <Login
           loginFormSubmitHandler={this.loginFormSubmitHandler}
           loginFormChangeHandler={this.loginFormChangeHandler}
