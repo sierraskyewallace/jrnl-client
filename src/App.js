@@ -3,8 +3,8 @@ import Login from "./components/login";
 
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       currentUser: null,
       loginForm: {
@@ -16,15 +16,29 @@ class App extends React.Component {
   }
 
   loginFormSubmitHandler = (event) => {
-    const { name, value } = event.target;
-    this.setState({
-      loginForm: {
-        ...this.state.loginForm,
-        [name]: value
-
+    event.preventDefault();
+    fetch("http://localhost:3000/api/v1/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(this.state.loginForm)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.error) {
+          alert(data.error);
+        } else {
+          this.setState({
+            currentUser: data.user
+          });
+        }
       }
-    });
+      );
   };
+
+
 
   loginFormChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -34,6 +48,7 @@ class App extends React.Component {
         [name]: value
       }
     });
+    
   };
 
 
@@ -47,8 +62,8 @@ class App extends React.Component {
         <h1>hello </h1>
         <Login
           loginFormSubmitHandler={this.loginFormSubmitHandler}
-          username={this.state.loginForm.username}
           loginFormChangeHandler={this.loginFormChangeHandler}
+          username={this.state.loginForm.username}
           password={this.state.loginForm.password}
         />
       </div>
