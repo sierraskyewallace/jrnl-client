@@ -1,76 +1,49 @@
 import React from "react";
-import Login from "./components/login";
+import Moods from "./components/moods";
 
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      currentUser: null,
-      loginForm: {
-        username: "",
-        password: ""
-      }
-
+      moods: [],
     };
   }
 
-  loginFormSubmitHandler = (event) => {
-    event.preventDefault();
-    fetch("http://localhost:3000/api/v1/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(this.state.loginForm)
-    })
+  // fetch all moods for current user
+  getMoods = () => {
+    fetch(`http://localhost:3000/api/v1/moods`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        if (data.error) {
-          alert(data.error);
-        } else {
-          this.setState({
-            currentUser: data.user
-          });
-        }
-      }
-      );
-  };
-
-
-
-  loginFormChangeHandler = (event) => {
-    const { name, value } = event.target;
-    this.setState({
-      loginForm: {
-        ...this.state.loginForm,
-        [name]: value
-      }
-    });
-    
-  };
-
+        this.setState({
+          moods: data.moods
+        });
+      });
+  }
 
 
 
 
 
   render() {
-    const { currentUser } = this.state;
+
+
     return (
       <div className="App">
         <h1>Welcome to JRNL </h1>
-        <h2>{ currentUser ? `Welcome ${currentUser.data.attributes.username}` : "Login" }</h2>
-        <Login
-          loginFormSubmitHandler={this.loginFormSubmitHandler}
-          loginFormChangeHandler={this.loginFormChangeHandler}
-          username={this.state.loginForm.username}
-          password={this.state.loginForm.password}
-        />
+     
+        
+        <Moods moods={this.state.moods} getMoods={this.getMoods} />
+        
       </div>
     );
   }
 }
+
+
+
+
+
 
 export default App;
